@@ -55,7 +55,7 @@ final class MapCollectionTest extends TestCase
 
         $this->expectException(ItemNotFoundException::class);
         $collection->find(function (MapInterface $map): bool {
-            return $map->getValue('id') === 4;
+            return 4 === $map->getValue('id');
         });
     }
 

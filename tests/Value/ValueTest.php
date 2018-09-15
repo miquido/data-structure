@@ -18,7 +18,7 @@ final class ValueTest extends TestCase
 
     public function testToMap(): void
     {
-        $value = new Value(['name' => 'John', 'surname' => 'Smith',]);
+        $value = new Value(['name' => 'John', 'surname' => 'Smith']);
 
         $map = $value->toMap();
         $this->assertCount(2, $map);

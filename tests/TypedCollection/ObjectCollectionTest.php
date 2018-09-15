@@ -43,7 +43,7 @@ final class ObjectCollectionTest extends TestCase
         $obj1 = new \stdClass();
         $obj2 = new \stdClass();
         $obj3 = new \stdClass();
-        $generate = function() use ($obj1, $obj2, $obj3): iterable {
+        $generate = function () use ($obj1, $obj2, $obj3): iterable {
             yield $obj1;
             yield $obj2;
             yield $obj3;

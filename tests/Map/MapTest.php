@@ -36,7 +36,6 @@ final class MapTest extends TestCase
     public function testCreateWithArrayConvertible(): void
     {
         $map = new Map(new class() implements ArrayConvertibleInterface {
-
             public function toArray(): array
             {
                 return ['key' => 'value'];
@@ -175,7 +174,7 @@ final class MapTest extends TestCase
         $map = Map::create(['name' => 'John', 'surname' => 'Smith', 'age' => 40, 'email' => 'john@smith.com']);
 
         $filtered = $map->filter(function ($value, string $key): bool {
-            return \is_string($value) && \strpos($key, 'name') !== false;
+            return \is_string($value) && false !== \mb_strpos($key, 'name');
         });
 
         $this->assertCount(4, $map);
@@ -206,7 +205,7 @@ final class MapTest extends TestCase
         $map = Map::create(['name' => 'John', 'surname' => 'Smith', 'age' => 40, 'email' => 'john@smith.com']);
 
         $filtered = $map->filterByKeys(function (string $key): bool {
-            return \strpos($key, 'name') !== false;
+            return false !== \mb_strpos($key, 'name');
         });
 
         $this->assertCount(4, $map);
@@ -219,7 +218,7 @@ final class MapTest extends TestCase
 
     public function testMerge(): void
     {
-        $map1 = new Map(['name' => 'John', 'surname' => 'Sm', 'age' => 40,]);
+        $map1 = new Map(['name' => 'John', 'surname' => 'Sm', 'age' => 40]);
         $map2 = new Map(['name' => 'John', 'surname' => 'Smith', 'email' => 'john@smith.com']);
 
         $map = $map1->merge($map2);
@@ -233,8 +232,8 @@ final class MapTest extends TestCase
     public function testEquals(): void
     {
         $map1 = new Map(['name' => 'John', 'surname' => 'Smith']);
-        $map2 = new Map(['name' => 'John', 'surname' => 'Smith', 'age' => 40,]);
-        $map3 = new Map(['name' => 'John', 'surname' => 'Smiths', 'age' => 40,]);
+        $map2 = new Map(['name' => 'John', 'surname' => 'Smith', 'age' => 40]);
+        $map3 = new Map(['name' => 'John', 'surname' => 'Smiths', 'age' => 40]);
         $map4 = new Map(['name' => 'John', 'surname' => 'Smith']);
 
         $this->assertTrue($map1->equals($map1));

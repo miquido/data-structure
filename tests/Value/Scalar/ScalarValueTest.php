@@ -85,7 +85,6 @@ final class ScalarValueTest extends TestCase
         $scalar = new ScalarValue(1537011441);
 
         $this->assertSame('2018-09-15 11:37:21', $scalar->dateTime()->format('Y-m-d H:i:s'));
-
     }
 
     public function testDateTime_InvalidInput(): void
@@ -94,6 +93,5 @@ final class ScalarValueTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $scalar->dateTime();
-
     }
 }

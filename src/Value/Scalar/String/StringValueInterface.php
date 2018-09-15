@@ -11,11 +11,13 @@ interface StringValueInterface extends ScalarConvertibleInterface
 {
     public function get(): string;
 
-    public function trim(string $charList = null): StringValueInterface;
-    public function toLower(): StringValueInterface;
-    public function toUpper(): StringValueInterface;
+    public function trim(string $charList = null): self;
+
+    public function toLower(): self;
+
+    public function toUpper(): self;
 
     public function split(string $delimiter, int $limit = null): StringCollectionInterface;
 
-    public function map(callable ...$callbacks): StringValueInterface;
+    public function map(callable ...$callbacks): self;
 }

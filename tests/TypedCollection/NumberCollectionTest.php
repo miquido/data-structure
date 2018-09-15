@@ -1,9 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Tests\Miquido\DataStructure\TypedCollection;
+
 namespace Tests\Miquido\DataStructure\TypedCollection;
+
 use Miquido\DataStructure\TypedCollection\NumberCollection;
 use PHPUnit\Framework\TestCase;
+
 final class NumberCollectionTest extends TestCase
 {
     public function testStaticCreation(): void
@@ -16,6 +21,7 @@ final class NumberCollectionTest extends TestCase
         $this->assertTrue($integers->includes(2.2));
         $this->assertTrue($integers->includes(3.3));
     }
+
     public function testIteratorWorks(): void
     {
         $integers = new NumberCollection(1.1, 2, 3.3);
@@ -26,6 +32,7 @@ final class NumberCollectionTest extends TestCase
         }
         $this->assertSame(3, $iterations);
     }
+
     public function testPush(): void
     {
         $integers = new NumberCollection(1.1, 2.2, 3.3);
@@ -40,6 +47,7 @@ final class NumberCollectionTest extends TestCase
         $this->assertTrue($integers2->includes(3.3));
         $this->assertTrue($integers2->includes(4.4));
     }
+
     public function testUnique(): void
     {
         $integers = new NumberCollection(1, 2, 3, 3, 1, 2);

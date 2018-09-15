@@ -23,7 +23,7 @@ final class Value implements ValueInterface
 
     public static function create($rawValue): ValueInterface
     {
-        return new Value($rawValue);
+        return new self($rawValue);
     }
 
     public function __construct($rawValue)

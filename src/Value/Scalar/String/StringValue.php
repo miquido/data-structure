@@ -17,7 +17,7 @@ final class StringValue implements StringValueInterface
 
     public static function create($value): StringValueInterface
     {
-        return new StringValue($value);
+        return new self($value);
     }
 
     public function __construct($value)
@@ -35,7 +35,7 @@ final class StringValue implements StringValueInterface
     {
         $charList = \is_string($charList) ? $charList : " \t\n\r\0\x0B";
 
-        return new StringValue(\trim($this->value, $charList));
+        return new self(\trim($this->value, $charList));
     }
 
     public function toLower(): StringValueInterface
@@ -51,8 +51,12 @@ final class StringValue implements StringValueInterface
     public function split(string $delimiter, int $limit = null): StringCollectionInterface
     {
         $limit = \is_int($limit) ? $limit : \PHP_INT_MAX;
+        $strings = @\explode($delimiter, $this->value, $limit);
+        if (false === $strings) {
+            throw new \InvalidArgumentException(\sprintf('Could not explode a string "%s" by "%s"', $this->value, $delimiter));
+        }
 
-        return StringCollection::create(...\explode($delimiter, $this->value, $limit));
+        return StringCollection::create(...$strings);
     }
 
     public function map(callable ...$callbacks): StringValueInterface
@@ -64,7 +68,7 @@ final class StringValue implements StringValueInterface
             Assert::string($value, \sprintf('Callback should return a string, but %s was returned', \gettype($value)));
         }
 
-        return new StringValue($value);
+        return new self($value);
     }
 
     public function get(): string

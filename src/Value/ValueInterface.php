@@ -13,17 +13,23 @@ use Miquido\DataStructure\Value\Scalar\String\StringValueInterface;
 interface ValueInterface
 {
     public function toMap(): MapInterface;
+
     public function toCollectionValue(bool $castScalar = true): CollectionValueInterface;
 
     public function toStringValue(): StringValueInterface;
+
     public function toNumberValue(): NumberValueInterface;
 
     public function toScalarValue(): ScalarValueInterface;
 
     public function string(): string;
+
     public function int(): int;
+
     public function float(): float;
+
     public function bool(bool $parseString = true): bool;
+
     public function dateTime(): \DateTime;
 
     public function getRawValue();

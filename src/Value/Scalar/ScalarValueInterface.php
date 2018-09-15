@@ -11,12 +11,17 @@ use Miquido\DataStructure\Value\Scalar\String\StringValueInterface;
 interface ScalarValueInterface extends ScalarConvertibleInterface
 {
     public function string(): string;
+
     public function int(): int;
+
     public function float(): float;
+
     public function bool(bool $parseString = true): bool;
+
     public function dateTime(): \DateTime;
 
     public function toStringValue(): StringValueInterface;
+
     public function toNumberValue(): NumberValueInterface;
 
     public function getRawValue();

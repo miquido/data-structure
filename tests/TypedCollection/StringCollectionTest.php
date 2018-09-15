@@ -21,6 +21,7 @@ final class StringCollectionTest extends TestCase
         $this->assertTrue($strings->includes('sit'));
         $this->assertTrue($strings->includes('amet'));
     }
+
     public function testIteratorWorks(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum');
@@ -31,6 +32,7 @@ final class StringCollectionTest extends TestCase
         }
         $this->assertSame(2, $iterations);
     }
+
     public function testPush(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum');
@@ -46,6 +48,7 @@ final class StringCollectionTest extends TestCase
         $this->assertTrue($new->includes('dolor'));
         $this->assertTrue($new->includes('sit'));
     }
+
     public function testRemove(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', 'dolor', 'sit');
@@ -61,12 +64,14 @@ final class StringCollectionTest extends TestCase
         $this->assertFalse($new->includes('dolor'));
         $this->assertTrue($new->includes('sit'));
     }
+
     public function testJoin(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', 'dolor', 'sit', 'amet');
         $string = $strings->join(',');
         $this->assertSame('lorem,ipsum,dolor,sit,amet', $string);
     }
+
     public function testDuplicates(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', 'sit', 'lorem', 'sit');
@@ -77,6 +82,7 @@ final class StringCollectionTest extends TestCase
         $this->assertContains('sit', $duplicates);
         $this->assertNotContains('ipsum', $duplicates);
     }
+
     public function testFilterNotIn(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', 'dolor', 'sit', 'amet', 'lorem');
@@ -84,6 +90,7 @@ final class StringCollectionTest extends TestCase
         $this->assertCount(6, $strings);
         $this->assertCount(4, $filtered);
     }
+
     public function testFilterNotEmpty(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', '', 'sit', '', 'lorem');
@@ -93,6 +100,7 @@ final class StringCollectionTest extends TestCase
         $this->assertTrue($strings->includes(''));
         $this->assertFalse($filtered->includes(''));
     }
+
     public function testUnique(): void
     {
         $strings = StringCollection::create('lorem', 'ipsum', 'sit', 'lorem', 'sit');
@@ -100,6 +108,7 @@ final class StringCollectionTest extends TestCase
         $this->assertCount(5, $strings);
         $this->assertCount(3, $unique);
     }
+
     public function testMap_MultipleCallbacks(): void
     {
         $strings = StringCollection::create(' lorem ', ' ipsum ');
@@ -113,6 +122,7 @@ final class StringCollectionTest extends TestCase
         $this->assertNotContains(' lorem ', $mapped);
         $this->assertNotContains(' ipsum ', $mapped);
     }
+
     public function testTrimAll(): void
     {
         $strings = StringCollection::create(' lorem ', ' ipsum ');
@@ -126,6 +136,7 @@ final class StringCollectionTest extends TestCase
         $this->assertNotContains(' lorem ', $trimmed);
         $this->assertNotContains(' ipsum ', $trimmed);
     }
+
     public function testToUpperCaseAll(): void
     {
         $strings = StringCollection::create(' lorem ', ' ipsum ');
@@ -139,6 +150,7 @@ final class StringCollectionTest extends TestCase
         $this->assertNotContains(' lorem ', $upperCased);
         $this->assertNotContains(' ipsum ', $upperCased);
     }
+
     public function testToLowerCaseAll(): void
     {
         $strings = StringCollection::create(' LOREM ', ' IPSUM ');
@@ -152,5 +164,4 @@ final class StringCollectionTest extends TestCase
         $this->assertNotContains(' LOREM ', $lowerCased);
         $this->assertNotContains(' IPSUM ', $lowerCased);
     }
-
 }

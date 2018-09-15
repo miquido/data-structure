@@ -8,8 +8,10 @@ use Miquido\DataStructure\ArrayConvertibleInterface;
 
 interface NumberCollectionInterface extends \Countable, \IteratorAggregate, ArrayConvertibleInterface
 {
-    public function push(float ...$numbers): NumberCollectionInterface;
-    public function unique(): NumberCollectionInterface;
+    public function push(float ...$numbers): self;
+
+    public function unique(): self;
+
     public function includes(float $number): bool;
 
     /**

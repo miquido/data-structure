@@ -9,5 +9,6 @@ use Miquido\DataStructure\Map\MapInterface;
 interface ObjectCollectionInterface extends \Countable
 {
     public function toMap(callable $keyProvider): MapInterface;
+
     public function getAll(): array;
 }

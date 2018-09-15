@@ -104,6 +104,13 @@ final class StringValueTest extends TestCase
         $this->assertContains('amet', $strings);
     }
 
+    public function testSplit_EmptyDelimeter(): void
+    {
+        $string = new StringValue('lorem ipsum dolor sit amet');
+        $this->expectException(\InvalidArgumentException::class);
+        $string->split('');
+    }
+
     public function testSplit_WithLimit(): void
     {
         $string = new StringValue('lorem ipsum dolor sit amet');
@@ -113,6 +120,5 @@ final class StringValueTest extends TestCase
         $this->assertContains('lorem', $strings);
         $this->assertContains('ipsum', $strings);
         $this->assertContains('dolor sit amet', $strings);
-
     }
 }

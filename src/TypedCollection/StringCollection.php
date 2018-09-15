@@ -17,7 +17,7 @@ final class StringCollection implements StringCollectionInterface
 
     public static function create(string ...$strings): StringCollectionInterface
     {
-        return new StringCollection(...$strings);
+        return new self(...$strings);
     }
 
     public function __construct(string ...$strings)
@@ -27,12 +27,12 @@ final class StringCollection implements StringCollectionInterface
 
     public function push(string ...$values): StringCollectionInterface
     {
-        return new StringCollection(...\array_merge($this->strings, $values));
+        return new self(...\array_merge($this->strings, $values));
     }
 
     public function remove(string ...$values): StringCollectionInterface
     {
-        return new StringCollection(...\array_filter($this->strings, function (string $value) use ($values) {
+        return new self(...\array_filter($this->strings, function (string $value) use ($values) {
             return !\in_array($value, $values, true);
         }));
     }
@@ -41,7 +41,7 @@ final class StringCollection implements StringCollectionInterface
     {
         Assert::minCount($callbacks, 1);
 
-        return new StringCollection(...\array_map(function(string $string) use ($callbacks): string {
+        return new self(...\array_map(function (string $string) use ($callbacks): string {
             $value = $string;
             foreach ($callbacks as $callback) {
                 $value = $callback($value);
@@ -69,7 +69,7 @@ final class StringCollection implements StringCollectionInterface
 
     public function filter(callable $callback): StringCollectionInterface
     {
-        return new StringCollection(...\array_filter($this->strings, function ($string) use ($callback): bool {
+        return new self(...\array_filter($this->strings, function ($string) use ($callback): bool {
             $result = $callback($string);
             Assert::boolean($result, 'Callback should return a boolean');
 
@@ -86,7 +86,7 @@ final class StringCollection implements StringCollectionInterface
 
     public function unique(): StringCollectionInterface
     {
-        return new StringCollection(...\array_reduce(
+        return new self(...\array_reduce(
             $this->strings,
             function (array $carry, string $item): array {
                 if (!\in_array($item, $carry, true)) {

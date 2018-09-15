@@ -8,12 +8,14 @@ use Miquido\DataStructure\ScalarConvertibleInterface;
 
 interface NumberValueInterface extends ScalarConvertibleInterface
 {
-    public function map(callable $callback): NumberValueInterface;
+    public function map(callable $callback): self;
 
     /**
      * @return int|float
      */
     public function get();
+
     public function int(): int;
+
     public function float(): float;
 }

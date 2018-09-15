@@ -16,7 +16,7 @@ final class MapCollection implements MapCollectionInterface
 
     public static function create(MapInterface ...$data): MapCollectionInterface
     {
-        return new MapCollection(...$data);
+        return new self(...$data);
     }
 
     public function __construct(MapInterface ...$data)
@@ -52,8 +52,10 @@ final class MapCollection implements MapCollectionInterface
 
     /**
      * @param callable $callback
-     * @return MapInterface
+     *
      * @throws ItemNotFoundException
+     *
+     * @return MapInterface
      */
     public function find(callable $callback): MapInterface
     {
@@ -71,9 +73,11 @@ final class MapCollection implements MapCollectionInterface
 
     /**
      * @param string $key
-     * @param $value
-     * @return MapInterface
+     * @param mixed  $value
+     *
      * @throws ItemNotFoundException
+     *
+     * @return MapInterface
      */
     public function findByKeyAndValue(string $key, $value): MapInterface
     {
@@ -84,7 +88,7 @@ final class MapCollection implements MapCollectionInterface
 
     public function filter(callable $callback): MapCollectionInterface
     {
-        return new MapCollection(...\array_filter(
+        return new self(...\array_filter(
             $this->data,
             function (MapInterface $item) use ($callback): bool {
                 $result = $callback($item);
@@ -97,7 +101,7 @@ final class MapCollection implements MapCollectionInterface
 
     public function map(callable $callback): MapCollectionInterface
     {
-        return new MapCollection(...\array_map(
+        return new self(...\array_map(
             function (MapInterface $item) use ($callback): MapInterface {
                 $mapped = $callback($item);
                 Assert::isInstanceOf(

@@ -20,11 +20,12 @@ final class Map implements MapInterface
 
     public static function create($values = null): MapInterface
     {
-        return new Map($values);
+        return new self($values);
     }
 
     /**
      * @param array|MapInterface|null $values
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($values = null)
@@ -44,7 +45,7 @@ final class Map implements MapInterface
 
     public function set(string $key, $value): MapInterface
     {
-        return new Map(\array_merge($this->data, [$key => $value]));
+        return new self(\array_merge($this->data, [$key => $value]));
     }
 
     public function get(string $key, $default = null, bool $nullDefault = false)
@@ -53,7 +54,7 @@ final class Map implements MapInterface
             return $this->data[$key];
         }
 
-        if ($default !== null || ($default === null && $nullDefault)) {
+        if (null !== $default || (null === $default && $nullDefault)) {
             return $default;
         }
 
@@ -69,7 +70,6 @@ final class Map implements MapInterface
     {
         return \array_key_exists($key, $this->data);
     }
-
 
     public function hasOneOf(string ...$keys): bool
     {
@@ -96,7 +96,7 @@ final class Map implements MapInterface
 
     public function remove(string ...$keysToRemove): MapInterface
     {
-        return new Map(\array_filter($this->data, function (/** @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
+        return new self(\array_filter($this->data, function (/* @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
             return !\in_array($key, $keysToRemove, true);
         }, \ARRAY_FILTER_USE_BOTH));
     }
@@ -116,12 +116,13 @@ final class Map implements MapInterface
         if ($this->has($newName)) {
             throw new \InvalidArgumentException(\sprintf('Key "%s" already exists', $newName));
         }
+
         return $this->remove($key)->set($newName, $this->get($key));
     }
 
     public function filter(callable $callback): MapInterface
     {
-        return new Map(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
+        return new self(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
             $result = $callback($value, $key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -131,7 +132,7 @@ final class Map implements MapInterface
 
     public function filterByValues(callable $callback): MapInterface
     {
-        return new Map(\array_filter($this->data, function ($value) use ($callback): bool {
+        return new self(\array_filter($this->data, function ($value) use ($callback): bool {
             $result = $callback($value);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -141,7 +142,7 @@ final class Map implements MapInterface
 
     public function filterByKeys(callable $callback): MapInterface
     {
-        return new Map(\array_filter($this->data, function (string $key) use ($callback): bool {
+        return new self(\array_filter($this->data, function (string $key) use ($callback): bool {
             $result = $callback($key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -151,7 +152,7 @@ final class Map implements MapInterface
 
     public function merge(MapInterface $map): MapInterface
     {
-        return new Map(\array_merge($this->toArray(), $map->toArray()));
+        return new self(\array_merge($this->toArray(), $map->toArray()));
     }
 
     public function equals(MapInterface $map): bool
@@ -181,7 +182,7 @@ final class Map implements MapInterface
 
     public function mapKeys(callable $callback): MapInterface
     {
-        $transformed = new Map([]);
+        $transformed = new self([]);
         foreach ($this->data as $key => $value) {
             $mappedKey = $callback($key);
             Assert::string($mappedKey, 'Callback should return a string');
@@ -211,6 +212,7 @@ final class Map implements MapInterface
 
     /**
      * @param mixed $offset
+     *
      * @return bool
      */
     public function offsetExists($offset): bool
@@ -220,6 +222,7 @@ final class Map implements MapInterface
 
     /**
      * @param mixed $offset
+     *
      * @return mixed
      */
     public function offsetGet($offset)

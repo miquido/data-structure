@@ -8,21 +8,27 @@ use Miquido\DataStructure\ArrayConvertibleInterface;
 
 interface StringCollectionInterface extends \Countable, \IteratorAggregate, ArrayConvertibleInterface
 {
-    public function push(string ...$values): StringCollectionInterface;
+    public function push(string ...$values): self;
 
-    public function remove(string ...$values): StringCollectionInterface;
+    public function remove(string ...$values): self;
 
-    public function map(callable ...$callbacks): StringCollectionInterface;
-    public function trimAll(): StringCollectionInterface;
-    public function toUpperCaseAll(): StringCollectionInterface;
-    public function toLowerCaseAll(): StringCollectionInterface;
+    public function map(callable ...$callbacks): self;
 
-    public function filter(callable $callback): StringCollectionInterface;
-    public function filterNotEmpty(): StringCollectionInterface;
-    public function filterNotIn(string ...$strings): StringCollectionInterface;
+    public function trimAll(): self;
 
-    public function unique(): StringCollectionInterface;
-    public function duplicates(): StringCollectionInterface;
+    public function toUpperCaseAll(): self;
+
+    public function toLowerCaseAll(): self;
+
+    public function filter(callable $callback): self;
+
+    public function filterNotEmpty(): self;
+
+    public function filterNotIn(string ...$strings): self;
+
+    public function unique(): self;
+
+    public function duplicates(): self;
 
     public function includes(string $value): bool;
 
