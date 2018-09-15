@@ -157,17 +157,17 @@ final class Map implements MapInterface
 
     public function equals(MapInterface $map): bool
     {
-        if ($this->keys()->count() === $map->keys()->count()) {
-            foreach ($this as $key => $value) {
-                if (!$map->has($key) || $map->get($key) !== $value) {
-                    return false;
-                }
-            }
-
-            return true;
+        if ($this->count() !== $map->count()) {
+            return false;
         }
 
-        return false;
+        foreach ($this as $key => $value) {
+            if (!$map->has($key) || $map->get($key) !== $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function keys(): StringCollectionInterface
