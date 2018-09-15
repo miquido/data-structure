@@ -20,7 +20,7 @@ final class ScalarValue implements ScalarValueInterface
 
     public static function create($value): ScalarValueInterface
     {
-        return new self($value);
+        return new ScalarValue($value);
     }
 
     public function __construct($value)

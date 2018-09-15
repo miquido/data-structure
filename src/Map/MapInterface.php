@@ -10,7 +10,7 @@ use Miquido\DataStructure\Value\ValueInterface;
 
 interface MapInterface extends \ArrayAccess, \IteratorAggregate, ArrayConvertibleInterface, \Countable
 {
-    public function set(string $key, $value): self;
+    public function set(string $key, $value): MapInterface;
 
     /**
      * @param string     $key
@@ -40,25 +40,25 @@ interface MapInterface extends \ArrayAccess, \IteratorAggregate, ArrayConvertibl
 
     public function hasAll(string ...$keys): bool;
 
-    public function pick(string ...$keysToPick): self;
+    public function pick(string ...$keysToPick): MapInterface;
 
-    public function remove(string ...$keysToRemove): self;
+    public function remove(string ...$keysToRemove): MapInterface;
 
-    public function rename(string $key, string $newName): self;
+    public function rename(string $key, string $newName): MapInterface;
 
-    public function filter(callable $callback): self;
+    public function filter(callable $callback): MapInterface;
 
-    public function filterByValues(callable $callback): self;
+    public function filterByValues(callable $callback): MapInterface;
 
-    public function filterByKeys(callable $callback): self;
+    public function filterByKeys(callable $callback): MapInterface;
 
-    public function merge(self $map): self;
+    public function merge(MapInterface $map): MapInterface;
 
-    public function equals(self $map): bool;
+    public function equals(MapInterface $map): bool;
 
     public function keys(): StringCollectionInterface;
 
     public function values(): array;
 
-    public function mapKeys(callable $callback): self;
+    public function mapKeys(callable $callback): MapInterface;
 }

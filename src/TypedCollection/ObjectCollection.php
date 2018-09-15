@@ -25,7 +25,7 @@ final class ObjectCollection implements ObjectCollectionInterface
             $objects[] = $object;
         }
 
-        return new self(...$objects);
+        return new ObjectCollection(...$objects);
     }
 
     public function toMap(callable $keyProvider): MapInterface

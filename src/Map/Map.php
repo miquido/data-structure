@@ -20,7 +20,7 @@ final class Map implements MapInterface
 
     public static function create($values = null): MapInterface
     {
-        return new self($values);
+        return new Map($values);
     }
 
     /**
@@ -45,7 +45,7 @@ final class Map implements MapInterface
 
     public function set(string $key, $value): MapInterface
     {
-        return new self(\array_merge($this->data, [$key => $value]));
+        return new Map(\array_merge($this->data, [$key => $value]));
     }
 
     public function get(string $key, $default = null, bool $nullDefault = false)
@@ -96,7 +96,7 @@ final class Map implements MapInterface
 
     public function remove(string ...$keysToRemove): MapInterface
     {
-        return new self(\array_filter($this->data, function (/* @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
+        return new Map(\array_filter($this->data, function (/* @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
             return !\in_array($key, $keysToRemove, true);
         }, \ARRAY_FILTER_USE_BOTH));
     }
@@ -122,7 +122,7 @@ final class Map implements MapInterface
 
     public function filter(callable $callback): MapInterface
     {
-        return new self(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
+        return new Map(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
             $result = $callback($value, $key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -132,7 +132,7 @@ final class Map implements MapInterface
 
     public function filterByValues(callable $callback): MapInterface
     {
-        return new self(\array_filter($this->data, function ($value) use ($callback): bool {
+        return new Map(\array_filter($this->data, function ($value) use ($callback): bool {
             $result = $callback($value);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -142,7 +142,7 @@ final class Map implements MapInterface
 
     public function filterByKeys(callable $callback): MapInterface
     {
-        return new self(\array_filter($this->data, function (string $key) use ($callback): bool {
+        return new Map(\array_filter($this->data, function (string $key) use ($callback): bool {
             $result = $callback($key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -152,7 +152,7 @@ final class Map implements MapInterface
 
     public function merge(MapInterface $map): MapInterface
     {
-        return new self(\array_merge($this->toArray(), $map->toArray()));
+        return new Map(\array_merge($this->toArray(), $map->toArray()));
     }
 
     public function equals(MapInterface $map): bool
@@ -182,7 +182,7 @@ final class Map implements MapInterface
 
     public function mapKeys(callable $callback): MapInterface
     {
-        $transformed = new self([]);
+        $transformed = new Map([]);
         foreach ($this->data as $key => $value) {
             $mappedKey = $callback($key);
             Assert::string($mappedKey, 'Callback should return a string');

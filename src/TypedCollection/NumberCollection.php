@@ -13,7 +13,7 @@ final class NumberCollection implements NumberCollectionInterface
 
     public static function create(float ...$numbers): NumberCollectionInterface
     {
-        return new self(...$numbers);
+        return new NumberCollection(...$numbers);
     }
 
     public function __construct(float ...$numbers)
@@ -28,12 +28,12 @@ final class NumberCollection implements NumberCollectionInterface
      */
     public function push(float ...$numbers): NumberCollectionInterface
     {
-        return new self(...\array_merge($this->numbers, $numbers));
+        return new NumberCollection(...\array_merge($this->numbers, $numbers));
     }
 
     public function unique(): NumberCollectionInterface
     {
-        return new self(...\array_reduce(
+        return new NumberCollection(...\array_reduce(
             $this->numbers,
             function (array $carry, float $number): array {
                 if (!\in_array($number, $carry, true)) {

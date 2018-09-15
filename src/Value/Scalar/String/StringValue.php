@@ -17,7 +17,7 @@ final class StringValue implements StringValueInterface
 
     public static function create($value): StringValueInterface
     {
-        return new self($value);
+        return new StringValue($value);
     }
 
     public function __construct($value)
@@ -35,7 +35,7 @@ final class StringValue implements StringValueInterface
     {
         $charList = \is_string($charList) ? $charList : " \t\n\r\0\x0B";
 
-        return new self(\trim($this->value, $charList));
+        return new StringValue(\trim($this->value, $charList));
     }
 
     public function toLower(): StringValueInterface
@@ -68,7 +68,7 @@ final class StringValue implements StringValueInterface
             Assert::string($value, \sprintf('Callback should return a string, but %s was returned', \gettype($value)));
         }
 
-        return new self($value);
+        return new StringValue($value);
     }
 
     public function get(): string

@@ -15,7 +15,7 @@ final class NumberValue implements NumberValueInterface
 
     public static function create($value): NumberValueInterface
     {
-        return new self($value);
+        return new NumberValue($value);
     }
 
     public function __construct($value)
@@ -27,7 +27,7 @@ final class NumberValue implements NumberValueInterface
 
     public function map(callable $callback): NumberValueInterface
     {
-        return new self($callback($this->number));
+        return new NumberValue($callback($this->number));
     }
 
     public function int(): int

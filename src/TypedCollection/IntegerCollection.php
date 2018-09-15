@@ -13,7 +13,7 @@ final class IntegerCollection implements IntegerCollectionInterface
 
     public static function create(int ...$numbers): IntegerCollectionInterface
     {
-        return new self(...$numbers);
+        return new IntegerCollection(...$numbers);
     }
 
     public function __construct(int ...$numbers)
@@ -23,12 +23,12 @@ final class IntegerCollection implements IntegerCollectionInterface
 
     public function push(int ...$numbers): IntegerCollectionInterface
     {
-        return new self(...\array_merge($this->numbers, $numbers));
+        return new IntegerCollection(...\array_merge($this->numbers, $numbers));
     }
 
     public function unique(): IntegerCollectionInterface
     {
-        return new self(...\array_reduce(
+        return new IntegerCollection(...\array_reduce(
             $this->numbers,
             function (array $carry, int $number): array {
                 if (!\in_array($number, $carry, true)) {

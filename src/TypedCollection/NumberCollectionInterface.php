@@ -8,9 +8,9 @@ use Miquido\DataStructure\ArrayConvertibleInterface;
 
 interface NumberCollectionInterface extends \Countable, \IteratorAggregate, ArrayConvertibleInterface
 {
-    public function push(float ...$numbers): self;
+    public function push(float ...$numbers): NumberCollectionInterface;
 
-    public function unique(): self;
+    public function unique(): NumberCollectionInterface;
 
     public function includes(float $number): bool;
 

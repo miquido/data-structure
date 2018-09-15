@@ -28,9 +28,9 @@ interface MapCollectionInterface extends \Countable, \IteratorAggregate, ArrayCo
      */
     public function findByKeyAndValue(string $key, $value): MapInterface;
 
-    public function filter(callable $callback): self;
+    public function filter(callable $callback): MapCollectionInterface;
 
-    public function map(callable $callback): self;
+    public function map(callable $callback): MapCollectionInterface;
 
     /**
      * @return MapInterface[]
