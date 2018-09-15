@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\TypedCollection;
 
-final class NumberCollection implements NumberCollectionInterface
+final class NumberCollection extends BaseNumberCollection implements NumberCollectionInterface
 {
-    /**
-     * @var float[]
-     */
-    private $numbers;
-
     public static function create(float ...$numbers): NumberCollectionInterface
     {
         return new NumberCollection(...$numbers);
@@ -33,17 +28,7 @@ final class NumberCollection implements NumberCollectionInterface
 
     public function unique(): NumberCollectionInterface
     {
-        return new NumberCollection(...\array_reduce(
-            $this->numbers,
-            function (array $carry, float $number): array {
-                if (!\in_array($number, $carry, true)) {
-                    $carry[] = $number;
-                }
-
-                return $carry;
-            },
-            []
-        ));
+        return new NumberCollection(...$this->getUniqueNumbers());
     }
 
     /**
@@ -54,34 +39,5 @@ final class NumberCollection implements NumberCollectionInterface
     public function includes(float $number): bool
     {
         return \in_array($number, $this->numbers, true);
-    }
-
-    /**
-     * @return float[]
-     */
-    public function toArray(): array
-    {
-        return $this->numbers;
-    }
-
-    public function values(): array
-    {
-        return $this->numbers;
-    }
-
-    /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return \count($this->numbers);
-    }
-
-    /**
-     * @return \Traversable
-     */
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->numbers);
     }
 }
