@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\Value;
+namespace Miquido\DataStructure\Tests\Value;
 
 use Miquido\DataStructure\Value\Value;
 use PHPUnit\Framework\TestCase;

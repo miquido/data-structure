@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\Map;
+namespace Miquido\DataStructure\Tests\Map;
 
 use Miquido\DataStructure\Exception\ItemNotFoundException;
 use Miquido\DataStructure\Map\Map;
@@ -40,6 +40,9 @@ final class MapCollectionTest extends TestCase
         $this->assertSame(3, $iterations);
     }
 
+    /**
+     * @throws ItemNotFoundException
+     */
     public function testFind(): void
     {
         $map1 = new Map(['id' => 1]);
@@ -55,10 +58,13 @@ final class MapCollectionTest extends TestCase
 
         $this->expectException(ItemNotFoundException::class);
         $collection->find(function (MapInterface $map): bool {
-            return 4 === $map->getValue('id');
+            return 4 < $map->getValue('id')->int();
         });
     }
 
+    /**
+     * @throws ItemNotFoundException
+     */
     public function testFindByKeyAndValue(): void
     {
         $map1 = new Map(['id' => 1]);

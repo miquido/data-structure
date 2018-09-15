@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\Map;
+namespace Miquido\DataStructure\Tests\Map;
 
 use Miquido\DataStructure\ArrayConvertibleInterface;
 use Miquido\DataStructure\Map\Map;
@@ -299,9 +299,9 @@ final class MapTest extends TestCase
     {
         $map = Map::create(['name' => 'John', 'surname' => 'Smith']);
 
-        $this->assertTrue(isset($map['name']));
-        $this->assertTrue(isset($map['surname']));
-        $this->assertFalse(isset($map['age']));
+        $this->assertArrayHasKey('name', $map);
+        $this->assertArrayHasKey('surname', $map);
+        $this->assertArrayNotHasKey('age', $map);
 
         $this->assertSame('John', $map['name']);
         $this->assertSame('Smith', $map['surname']);

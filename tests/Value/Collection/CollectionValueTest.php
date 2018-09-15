@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\Value\Collection;
+namespace Miquido\DataStructure\Tests\Value\Collection;
 
 use Miquido\DataStructure\Value\Collection\CollectionValue;
 use PHPUnit\Framework\TestCase;

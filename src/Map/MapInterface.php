@@ -13,9 +13,9 @@ interface MapInterface extends \ArrayAccess, \IteratorAggregate, ArrayConvertibl
     public function set(string $key, $value): self;
 
     /**
-     * @param string $key
-     * @param null   $default
-     * @param bool   $nullDefault
+     * @param string     $key
+     * @param null|mixed $default
+     * @param bool       $nullDefault
      *
      * @throws \OutOfBoundsException
      *

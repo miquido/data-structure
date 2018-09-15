@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\TypedCollection;
+namespace Miquido\DataStructure\Tests\TypedCollection;
 
-namespace Tests\Miquido\DataStructure\TypedCollection;
+namespace Miquido\DataStructure\Tests\TypedCollection;
 
 use Miquido\DataStructure\TypedCollection\NumberCollection;
 use PHPUnit\Framework\TestCase;

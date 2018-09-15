@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\Value\Scalar\String;
+namespace Miquido\DataStructure\Tests\Value\Scalar\String;
 
 use Miquido\DataStructure\Value\Scalar\String\StringValue;
 use PHPUnit\Framework\TestCase;

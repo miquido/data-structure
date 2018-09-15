@@ -2,39 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Miquido\DataStructure\TypedCollection;
+namespace Miquido\DataStructure\Tests\TypedCollection;
 
+use Miquido\DataStructure\Tests\UserMock;
 use Miquido\DataStructure\TypedCollection\ObjectCollection;
 use PHPUnit\Framework\TestCase;
-
-class UserMock
-{
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $email;
-
-    public function __construct(int $id, string $email)
-    {
-        $this->id = $id;
-        $this->email = $email;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-}
 
 final class ObjectCollectionTest extends TestCase
 {

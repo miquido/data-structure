@@ -24,7 +24,7 @@ final class Map implements MapInterface
     }
 
     /**
-     * @param array|MapInterface|null $values
+     * @param array|ArrayConvertibleInterface|MapInterface|null $values
      *
      * @throws \InvalidArgumentException
      */
