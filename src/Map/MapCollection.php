@@ -2,19 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Miquido\DataStructure\HashMap;
+namespace Miquido\DataStructure\Map;
 
 use Miquido\DataStructure\Exception\ItemNotFoundException;
 use Webmozart\Assert\Assert;
 
-final class HashMapCollection implements HashMapCollectionInterface
+final class MapCollection implements MapCollectionInterface
 {
     /**
-     * @var HashMapInterface[]
+     * @var MapInterface[]
      */
     private $data;
 
-    public function __construct(HashMapInterface ...$data)
+    public static function create(MapInterface ...$data): MapCollectionInterface
+    {
+        return new MapCollection(...$data);
+    }
+
+    public function __construct(MapInterface ...$data)
     {
         $this->data = $data;
     }
@@ -38,7 +43,7 @@ final class HashMapCollection implements HashMapCollectionInterface
     public function toArray(): array
     {
         return \array_map(
-            function (HashMapInterface $map): array {
+            function (MapInterface $map): array {
                 return $map->toArray();
             },
             $this->data
@@ -47,10 +52,10 @@ final class HashMapCollection implements HashMapCollectionInterface
 
     /**
      * @param callable $callback
-     * @return HashMapInterface
+     * @return MapInterface
      * @throws ItemNotFoundException
      */
-    public function find(callable $callback): HashMapInterface
+    public function find(callable $callback): MapInterface
     {
         foreach ($this->data as $item) {
             $result = $callback($item);
@@ -67,21 +72,21 @@ final class HashMapCollection implements HashMapCollectionInterface
     /**
      * @param string $key
      * @param $value
-     * @return HashMapInterface
+     * @return MapInterface
      * @throws ItemNotFoundException
      */
-    public function findByKeyAndValue(string $key, $value): HashMapInterface
+    public function findByKeyAndValue(string $key, $value): MapInterface
     {
-        return $this->find(function (HashMapInterface $item) use ($key, $value): bool {
+        return $this->find(function (MapInterface $item) use ($key, $value): bool {
             return $item->get($key) === $value;
         });
     }
 
-    public function filter(callable $callback): HashMapCollectionInterface
+    public function filter(callable $callback): MapCollectionInterface
     {
-        return new HashMapCollection(...\array_filter(
+        return new MapCollection(...\array_filter(
             $this->data,
-            function (HashMapInterface $item) use ($callback): bool {
+            function (MapInterface $item) use ($callback): bool {
                 $result = $callback($item);
                 Assert::boolean($result, \sprintf('Callback should return a boolean, but %s was returned', \gettype($result)));
 
@@ -90,15 +95,15 @@ final class HashMapCollection implements HashMapCollectionInterface
         ));
     }
 
-    public function map(callable $callback): HashMapCollectionInterface
+    public function map(callable $callback): MapCollectionInterface
     {
-        return new HashMapCollection(...\array_map(
-            function (HashMapInterface $item) use ($callback): HashMapInterface {
+        return new MapCollection(...\array_map(
+            function (MapInterface $item) use ($callback): MapInterface {
                 $mapped = $callback($item);
                 Assert::isInstanceOf(
                     $mapped,
-                    HashMapInterface::class,
-                    \sprintf('Callback should return a HashMapInterface, but %s was returned', \is_object($mapped) ? \get_class($mapped) : \gettype($mapped))
+                    MapInterface::class,
+                    \sprintf('Callback should return a MapInterface, but %s was returned', \is_object($mapped) ? \get_class($mapped) : \gettype($mapped))
                 );
 
                 return $mapped;
@@ -108,7 +113,7 @@ final class HashMapCollection implements HashMapCollectionInterface
     }
 
     /**
-     * @return HashMapInterface[]
+     * @return MapInterface[]
      */
     public function getAll(): array
     {

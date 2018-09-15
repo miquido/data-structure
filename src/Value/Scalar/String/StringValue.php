@@ -15,13 +15,19 @@ final class StringValue implements StringValueInterface
      */
     private $value;
 
-    public static function create(string $value): StringValueInterface
+    public static function create($value): StringValueInterface
     {
         return new StringValue($value);
     }
 
-    public function __construct(string $value)
+    public function __construct($value)
     {
+        if ((\is_scalar($value) && !\is_string($value)) || (\is_object($value) && \method_exists($value, '__toString'))) {
+            $value = (string) $value;
+        }
+
+        Assert::string($value);
+
         $this->value = $value;
     }
 
@@ -34,12 +40,12 @@ final class StringValue implements StringValueInterface
 
     public function toLower(): StringValueInterface
     {
-        return new StringValue(\mb_strtolower($this->value));
+        return $this->map('mb_strtolower');
     }
 
     public function toUpper(): StringValueInterface
     {
-        return new StringValue(\mb_strtoupper($this->value));
+        return $this->map('mb_strtoupper');
     }
 
     public function split(string $delimiter, int $limit = null): StringCollectionInterface
@@ -49,10 +55,14 @@ final class StringValue implements StringValueInterface
         return StringCollection::create(...\explode($delimiter, $this->value, $limit));
     }
 
-    public function map(callable $callback): StringValueInterface
+    public function map(callable ...$callbacks): StringValueInterface
     {
-        $value = $callback($this->value);
-        Assert::string($value, \sprintf('Callback should return a string, but %s was returned', \gettype($value)));
+        Assert::minCount($callbacks, 1);
+        $value = $this->value;
+        foreach ($callbacks as $callback) {
+            $value = $callback($value);
+            Assert::string($value, \sprintf('Callback should return a string, but %s was returned', \gettype($value)));
+        }
 
         return new StringValue($value);
     }

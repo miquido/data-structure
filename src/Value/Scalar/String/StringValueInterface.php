@@ -17,5 +17,5 @@ interface StringValueInterface extends ScalarConvertibleInterface
 
     public function split(string $delimiter, int $limit = null): StringCollectionInterface;
 
-    public function map(callable $callback): StringValueInterface;
+    public function map(callable ...$callbacks): StringValueInterface;
 }

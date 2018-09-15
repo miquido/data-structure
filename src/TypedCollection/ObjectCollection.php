@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\TypedCollection;
 
-use Miquido\DataStructure\HashMap\HashMap;
-use Miquido\DataStructure\HashMap\HashMapInterface;
+use Miquido\DataStructure\Map\Map;
+use Miquido\DataStructure\Map\MapInterface;
 use Webmozart\Assert\Assert;
 
 final class ObjectCollection implements ObjectCollectionInterface
@@ -28,11 +28,11 @@ final class ObjectCollection implements ObjectCollectionInterface
         return new ObjectCollection(...$objects);
     }
 
-    public function toMap(callable $keyProvider): HashMapInterface
+    public function toMap(callable $keyProvider): MapInterface
     {
         return \array_reduce(
             $this->objects,
-            function (HashMapInterface $map, object $object) use ($keyProvider): HashMapInterface {
+            function (MapInterface $map, object $object) use ($keyProvider): MapInterface {
                 $key = $keyProvider($object);
                 if (!\is_string($key)) {
                     throw new \RuntimeException(\sprintf('Key provider should return a string, got %s', \gettype($key)));
@@ -43,7 +43,7 @@ final class ObjectCollection implements ObjectCollectionInterface
 
                 return $map->set($key, $object);
             },
-            new HashMap()
+            new Map()
         );
     }
 

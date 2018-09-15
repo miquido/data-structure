@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace Miquido\DataStructure\Value;
 
 use Miquido\DataStructure\ArrayConvertibleInterface;
-use Miquido\DataStructure\HashMap\HashMap;
-use Miquido\DataStructure\HashMap\HashMapInterface;
+use Miquido\DataStructure\Map\Map;
+use Miquido\DataStructure\Map\MapInterface;
 use Miquido\DataStructure\Value\Collection\CollectionValue;
 use Miquido\DataStructure\Value\Collection\CollectionValueInterface;
+use Miquido\DataStructure\Value\Scalar\Number\NumberValue;
+use Miquido\DataStructure\Value\Scalar\Number\NumberValueInterface;
 use Miquido\DataStructure\Value\Scalar\ScalarValue;
 use Miquido\DataStructure\Value\Scalar\ScalarValueInterface;
+use Miquido\DataStructure\Value\Scalar\String\StringValue;
+use Miquido\DataStructure\Value\Scalar\String\StringValueInterface;
 use Webmozart\Assert\Assert;
 
 final class Value implements ValueInterface
 {
-    private $rawValue;
+    private $value;
 
     public static function create($rawValue): ValueInterface
     {
@@ -24,33 +28,65 @@ final class Value implements ValueInterface
 
     public function __construct($rawValue)
     {
-        $this->rawValue = $rawValue;
+        $this->value = $rawValue;
     }
 
-    public function scalar(): ScalarValueInterface
+    public function toMap(): MapInterface
     {
-        return new ScalarValue($this->rawValue);
+        return new Map($this->value);
     }
 
-    public function collection(bool $castScalar = true): CollectionValueInterface
+    public function toCollectionValue(bool $castScalar = true): CollectionValueInterface
     {
-        $value = $castScalar && \is_scalar($this->rawValue) ? [$this->rawValue] : $this->rawValue;
+        $value = $castScalar && \is_scalar($this->value) ? [$this->value] : $this->value;
         $value = $value instanceof ArrayConvertibleInterface ? $value->toArray() : $value;
         Assert::isArray($value);
 
         return new CollectionValue($value);
     }
 
-    public function getRawValue()
+    public function toScalarValue(): ScalarValueInterface
     {
-        return $this->rawValue;
+        return new ScalarValue($this->value);
     }
 
-    public function hashMap(): HashMapInterface
+    public function toStringValue(): StringValueInterface
     {
-        $value = $this->rawValue instanceof ArrayConvertibleInterface ? $this->rawValue->toArray() : $this->rawValue;
-        Assert::isArray($value, \sprintf('Value type %s could not be converted to HashMap', \gettype($this->rawValue)));
+        return new StringValue($this->value);
+    }
 
-        return new HashMap($value);
+    public function toNumberValue(): NumberValueInterface
+    {
+        return new NumberValue($this->value);
+    }
+
+    public function string(): string
+    {
+        return $this->toStringValue()->get();
+    }
+
+    public function int(): int
+    {
+        return $this->toNumberValue()->int();
+    }
+
+    public function float(): float
+    {
+        return $this->toNumberValue()->float();
+    }
+
+    public function bool(bool $parseString = true): bool
+    {
+        return $this->toScalarValue()->bool($parseString);
+    }
+
+    public function dateTime(): \DateTime
+    {
+        return $this->toScalarValue()->dateTime();
+    }
+
+    public function getRawValue()
+    {
+        return $this->value;
     }
 }

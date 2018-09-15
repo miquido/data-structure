@@ -51,8 +51,6 @@ final class CollectionValue implements CollectionValueInterface
 
     public function objects(): ObjectCollectionInterface
     {
-        Assert::allObject($this->values);
-
         return new ObjectCollection(...$this->values);
     }
 
@@ -79,5 +77,13 @@ final class CollectionValue implements CollectionValueInterface
     public function toArray(): array
     {
         return $this->values;
+    }
+
+    /**
+     * @return \Traversable
+     */
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->values);
     }
 }

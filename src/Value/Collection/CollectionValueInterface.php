@@ -10,7 +10,7 @@ use Miquido\DataStructure\TypedCollection\NumberCollectionInterface;
 use Miquido\DataStructure\TypedCollection\ObjectCollectionInterface;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
 
-interface CollectionValueInterface extends \Countable, ArrayConvertibleInterface
+interface CollectionValueInterface extends \Countable, \IteratorAggregate, ArrayConvertibleInterface
 {
     public function strings(): StringCollectionInterface;
     public function numbers(): NumberCollectionInterface;

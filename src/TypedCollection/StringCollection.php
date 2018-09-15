@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\TypedCollection;
 
-use Miquido\DataStructure\HashMap\HashMap;
-use Miquido\DataStructure\HashMap\HashMapInterface;
+use Miquido\DataStructure\Map\Map;
+use Miquido\DataStructure\Map\MapInterface;
 use Webmozart\Assert\Assert;
 
 final class StringCollection implements StringCollectionInterface
@@ -37,15 +37,16 @@ final class StringCollection implements StringCollectionInterface
         }));
     }
 
-    /**
-     * @param callable $callback
-     * @return StringCollectionInterface
-     */
-    public function map(callable $callback): StringCollectionInterface
+    public function map(callable ...$callbacks): StringCollectionInterface
     {
-        return new StringCollection(...\array_map(function(string $string) use ($callback): string {
-            $value = $callback($string);
-            Assert::string($value, 'Callback should return a string');
+        Assert::minCount($callbacks, 1);
+
+        return new StringCollection(...\array_map(function(string $string) use ($callbacks): string {
+            $value = $string;
+            foreach ($callbacks as $callback) {
+                $value = $callback($value);
+                Assert::string($value, 'Callback should return a string');
+            }
 
             return $value;
         }, $this->strings));
@@ -100,13 +101,13 @@ final class StringCollection implements StringCollectionInterface
 
     public function duplicates(): StringCollectionInterface
     {
-        /** @var HashMapInterface $grouped */
+        /** @var MapInterface $grouped */
         $grouped = \array_reduce(
             $this->strings,
-            function (HashMapInterface $group, string $string): HashMapInterface {
-                return $group->set($string, $group->has($string) ? 1 + $group->getValue($string)->scalar()->number()->int() : 1);
+            function (MapInterface $group, string $string): MapInterface {
+                return $group->set($string, $group->has($string) ? 1 + $group->getValue($string)->int() : 1);
             },
-            new HashMap()
+            new Map()
         );
 
         return $grouped->filterByValues(function (int $value): bool {
@@ -119,7 +120,7 @@ final class StringCollection implements StringCollectionInterface
         return \in_array($value, $this->strings, true);
     }
 
-    public function notIn(string ...$strings): StringCollectionInterface
+    public function filterNotIn(string ...$strings): StringCollectionInterface
     {
         return $this->filter(function (string $value) use ($strings): bool {
             return !\in_array($value, $strings, true);

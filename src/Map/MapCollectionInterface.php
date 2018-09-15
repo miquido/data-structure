@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Miquido\DataStructure\Map;
+
+use Miquido\DataStructure\ArrayConvertibleInterface;
+use Miquido\DataStructure\Exception\ItemNotFoundException;
+
+interface MapCollectionInterface extends \Countable, \IteratorAggregate, ArrayConvertibleInterface
+{
+    /**
+     * @param callable $callback
+     * @return MapInterface
+     * @throws ItemNotFoundException
+     */
+    public function find(callable $callback): MapInterface;
+
+    /**
+     * @param string $key
+     * @param $value
+     * @return MapInterface
+     * @throws ItemNotFoundException
+     */
+    public function findByKeyAndValue(string $key, $value): MapInterface;
+
+    public function filter(callable $callback): MapCollectionInterface;
+
+    public function map(callable $callback): MapCollectionInterface;
+
+    /**
+     * @return MapInterface[]
+     */
+    public function getAll(): array;
+}

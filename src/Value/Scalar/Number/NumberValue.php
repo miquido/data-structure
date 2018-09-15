@@ -20,24 +20,14 @@ final class NumberValue implements NumberValueInterface
 
     public function __construct($value)
     {
-        if (!\is_int($value) && !\is_float($value)) {
-            throw new \InvalidArgumentException(\sprintf('Expected integer or float, got %s', \gettype($value)));
-        }
+        Assert::numeric($value);
 
-        $this->number = $value;
-    }
-
-    public function round(int $precision = 0, int $mode = \PHP_ROUND_HALF_UP): NumberValueInterface
-    {
-        return new NumberValue(\round($this->float(), $precision, $mode));
+        $this->number = $value + 0; // cast to int or float
     }
 
     public function map(callable $callback): NumberValueInterface
     {
-        $value = $callback($this->number);
-        Assert::numeric($value, \sprintf('Callback should return a number, but %s was returned', \gettype($value)));
-
-        return new NumberValue($value);
+        return new NumberValue($callback($this->number));
     }
 
     public function int(): int

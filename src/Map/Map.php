@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Miquido\DataStructure\HashMap;
+namespace Miquido\DataStructure\Map;
 
 use Miquido\DataStructure\ArrayConvertibleInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
@@ -11,15 +11,20 @@ use Miquido\DataStructure\Value\Value;
 use Miquido\DataStructure\Value\ValueInterface;
 use Webmozart\Assert\Assert;
 
-final class HashMap implements HashMapInterface
+final class Map implements MapInterface
 {
     /**
      * @var array
      */
     private $data;
 
+    public static function create($values = null): MapInterface
+    {
+        return new Map($values);
+    }
+
     /**
-     * @param array|HashMapInterface|null $values
+     * @param array|MapInterface|null $values
      * @throws \InvalidArgumentException
      */
     public function __construct($values = null)
@@ -27,23 +32,19 @@ final class HashMap implements HashMapInterface
         if (null === $values) {
             $values = [];
         }
-        if ($values instanceof HashMapInterface) {
+        if ($values instanceof ArrayConvertibleInterface) {
             $values = $values->toArray();
         }
 
-        Assert::isArray($values, \sprintf('Invalid input type "%s" (allowed: array, %s)', \gettype($values), HashMapInterface::class));
+        Assert::isArray($values, \sprintf('Invalid input type "%s" (allowed: array, %s)', \gettype($values), ArrayConvertibleInterface::class));
         Assert::allString(\array_keys($values), 'Only string keys are allowed');
 
         $this->data = $values;
     }
 
-    public function set(string $key, $value): HashMapInterface
+    public function set(string $key, $value): MapInterface
     {
-        if ($this->has($key) && $this->get($key) === $value) {
-            return $this;
-        }
-
-        return new HashMap(\array_merge($this->data, [$key => $value]));
+        return new Map(\array_merge($this->data, [$key => $value]));
     }
 
     public function get(string $key, $default = null, bool $nullDefault = false)
@@ -59,9 +60,9 @@ final class HashMap implements HashMapInterface
         throw new \OutOfBoundsException(\sprintf('Key "%s" does not exist', $key));
     }
 
-    public function getValue(string $key): ValueInterface
+    public function getValue(string $key, $default = null, bool $nullDefault = false): ValueInterface
     {
-        return new Value($this->get($key));
+        return new Value($this->get($key, $default, $nullDefault));
     }
 
     public function has(string $key): bool
@@ -83,9 +84,7 @@ final class HashMap implements HashMapInterface
 
     public function hasAll(string ...$keys): bool
     {
-        if (\count($keys) === 0) {
-            throw new \InvalidArgumentException('Please provide at least one key');
-        }
+        Assert::minCount($keys, 1, 'Please provide at least one key');
         foreach ($keys as $name) {
             if (!$this->has($name)) {
                 return false;
@@ -95,43 +94,34 @@ final class HashMap implements HashMapInterface
         return true;
     }
 
-    public function remove(string ...$keysToRemove): HashMapInterface
+    public function remove(string ...$keysToRemove): MapInterface
     {
-        if (\count($keysToRemove) === 0 || !$this->hasOneOf(...$keysToRemove)) {
-            return $this;
-        }
-
-        return new HashMap(\array_filter($this->data, function (/** @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
+        return new Map(\array_filter($this->data, function (/** @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToRemove): bool {
             return !\in_array($key, $keysToRemove, true);
         }, \ARRAY_FILTER_USE_BOTH));
     }
 
-    public function pick(string ...$keysToPick): HashMapInterface
+    public function pick(string ...$keysToPick): MapInterface
     {
-        $keys = $this->keys();
-        $notFoundKeys = StringCollection::create(...$keysToPick)->filter(function ($key) use ($keys): bool {
-            return !$keys->includes($key);
-        });
-        if ($notFoundKeys->count() > 0) {
-            throw new \InvalidArgumentException(\sprintf('Keys not found: %s', $notFoundKeys->join(', ')));
-        }
-
-        return new HashMap(\array_filter($this->data, function (/** @noinspection PhpUnusedParameterInspection */$value, $key) use ($keysToPick): bool {
+        return $this->filterByKeys(function (string $key) use ($keysToPick): bool {
             return \in_array($key, $keysToPick, true);
-        }, \ARRAY_FILTER_USE_BOTH));
+        });
     }
 
-    public function rename(string $key, string $newName): HashMapInterface
+    public function rename(string $key, string $newName): MapInterface
     {
+        if (!$this->has($key)) {
+            throw new \InvalidArgumentException(\sprintf('Key "%s" does not exist', $key));
+        }
         if ($this->has($newName)) {
             throw new \InvalidArgumentException(\sprintf('Key "%s" already exists', $newName));
         }
         return $this->remove($key)->set($newName, $this->get($key));
     }
 
-    public function filter(callable $callback): HashMapInterface
+    public function filter(callable $callback): MapInterface
     {
-        return new HashMap(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
+        return new Map(\array_filter($this->data, function ($value, string $key) use ($callback): bool {
             $result = $callback($value, $key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -139,9 +129,9 @@ final class HashMap implements HashMapInterface
         }, \ARRAY_FILTER_USE_BOTH));
     }
 
-    public function filterByValues(callable $callback): HashMapInterface
+    public function filterByValues(callable $callback): MapInterface
     {
-        return new HashMap(\array_filter($this->data, function ($value) use ($callback): bool {
+        return new Map(\array_filter($this->data, function ($value) use ($callback): bool {
             $result = $callback($value);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -149,9 +139,9 @@ final class HashMap implements HashMapInterface
         }));
     }
 
-    public function filterByKeys(callable $callback): HashMapInterface
+    public function filterByKeys(callable $callback): MapInterface
     {
-        return new HashMap(\array_filter($this->data, function (string $key) use ($callback): bool {
+        return new Map(\array_filter($this->data, function (string $key) use ($callback): bool {
             $result = $callback($key);
             Assert::boolean($result, \sprintf('Callback should return boolean, got %s', \gettype($result)));
 
@@ -159,12 +149,12 @@ final class HashMap implements HashMapInterface
         }, \ARRAY_FILTER_USE_KEY));
     }
 
-    public function merge(HashMapInterface $map): HashMapInterface
+    public function merge(MapInterface $map): MapInterface
     {
-        return new HashMap(\array_merge($this->toArray(), $map->toArray()));
+        return new Map(\array_merge($this->toArray(), $map->toArray()));
     }
 
-    public function equals(HashMapInterface $map): bool
+    public function equals(MapInterface $map): bool
     {
         if ($this->keys()->count() === $map->keys()->count()) {
             foreach ($this as $key => $value) {
@@ -189,9 +179,9 @@ final class HashMap implements HashMapInterface
         return \array_values($this->data);
     }
 
-    public function mapKeys(callable $callback): HashMapInterface
+    public function mapKeys(callable $callback): MapInterface
     {
-        $transformed = new HashMap([]);
+        $transformed = new Map([]);
         foreach ($this->data as $key => $value) {
             $mappedKey = $callback($key);
             Assert::string($mappedKey, 'Callback should return a string');
