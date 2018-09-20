@@ -19,9 +19,13 @@
             "name": "Konrad Obal",
             "email": "konrad.obal@miquido.com",
             "homepage": "https://www.miquido.com"
+        },
+        {
+            "name": "Dariusz Prząda",
+            "email": "dariusz.przada@miquido.com",
+            "homepage": "https://www.miquido.com"
         }
     ],
-
     "require": {
         "php": "^7.2",
         "ext-mbstring": "*",
