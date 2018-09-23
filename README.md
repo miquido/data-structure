@@ -29,20 +29,20 @@ or simply add this line to your `composer.json` file:
 
 ## Examples
 
-- [Map](#Map)
-- [MapCollection](#MapCollection)
-- [StringCollection](#StringCollection)
-- [IntegerCollection](#IntegerCollection)
-- [NumberCollection](#NumberCollection)
-- [ObjectCollection](#ObjectCollection)
-- [Value](#Value)
-- [ScalarValue](#ScalarValue)
-- [StringValue](#StringValue)
-- [NumberValue](#NumberValue)
-- [CollectionValue](#CollectionValue)
+- [Map](#map)
+- [MapCollection](#mapcollection)
+- [StringCollection](#stringcollection)
+- [IntegerCollection](#integercollection)
+- [NumberCollection](#numbercollection)
+- [ObjectCollection](#objectcollection)
+- [Value](#value)
+- [ScalarValue](#scalarvalue)
+- [StringValue](#stringvalue)
+- [NumberValue](#numbervalue)
+- [CollectionValue](#collectionvalue)
 
 ### Map
-Immutable wrapper on associative array.
+Immutable wrapper for associative array.
 
 ```php
 <?php
@@ -67,18 +67,12 @@ $map->keys(); // new StringCollection('name', 'surname', 'age')
 $map->keys()->values(); // ['name', 'surname', 'age']
 $map->values(); // ['John', 'Smith', 30]
 $map->toArray(); // ['name' => 'John', 'surname' => 'Smith', 'age' => 30]
-```
 
-All methods that modify data return new Map object.
-
-```php
-<?php
-
-use Miquido\DataStructure\Map\Map;
+// IMPORTANT! Methods does not modify a state of the object, they return new Map() instance with new state
 
 $map = new Map(['name' => 'John', 'surname' => 'Smith']);
-$map2 = $map->set('email', 'john@smith'); // returns new Map object
-$map3 = $map2->remove('email');
+$map2 = $map->set('email', 'john@smith'); // new Map(['name' => 'John', 'surname' => 'Smith', 'email' => 'john@smith'])
+$map3 = $map2->remove('email'); // new Map(['name' => 'John', 'surname' => 'Smith'])
 
 $map->has('email'); // false
 $map2->has('email'); // true
@@ -87,26 +81,26 @@ $map->equals($map2); // false
 $map->equals($map3); // true
 
 // other immutable methods:
-$map->rename('name', 'firstName')->rename('surname', 'lastName'); // returns new Map(['firstName' => 'John', 'lastName' => 'Smith'])
-$map->pick('name'); // returns new Map(['name' => 'John'])
+$map->rename('name', 'firstName')->rename('surname', 'lastName'); // new Map(['firstName' => 'John', 'lastName' => 'Smith'])
+$map->pick('name'); // new Map(['name' => 'John'])
 $map->mapKeys(function (string $key): string {
-    return \sprintf('__%s__', \strtoupper($key)); // returns new Map(['__NAME__' => 'John', '__SURNAME__' => 'Smith']);
+    return \sprintf('__%s__', \strtoupper($key)); // new Map(['__NAME__' => 'John', '__SURNAME__' => 'Smith']);
 });
 
 $map = new Map(['2016' => 50, '2017' => 150, '2018' => 250]);
 $map->filter(function (int $value, string $key): bool { 
-    return $value > 200 || $key === '2016'; // returns new Map(['2016' => 50, '2018' => 250]) 
+    return $value > 200 || $key === '2016'; // new Map(['2016' => 50, '2018' => 250]) 
 });
 $map->filterByKeys(function (string $key): bool {
-    return \in_array($key, ['2016', '2017'], true); // returns new Map(['2016' => 50, '2017' => 150])
+    return \in_array($key, ['2016', '2017'], true); // new Map(['2016' => 50, '2017' => 150])
 });
 $map->filterByValues(function (int $value): bool {
-    return $value < 200; // returns new Map(['2016' => 50, '2017' => 150])
+    return $value < 200; // new Map(['2016' => 50, '2017' => 150])
 });
 
 $map1 = new Map(['name' => 'John']);
 $map2 = new Map(['surname' => 'Smith']);
-$map1->merge($map2);  // returns new Map(['name' => 'John', 'surname' => 'Smith'])
+$map1->merge($map2);  // new Map(['name' => 'John', 'surname' => 'Smith'])
 ```
 
 ### MapCollection
@@ -141,8 +135,8 @@ $collection->find(function (MapInterface $user): bool {
 
 $collection->findByKeyAndValue('name', 'John'); // returns $user1
 
-$collection->getAll(); // returns [$user1, $user2]
-$collection->toArray(); // returns [['id' => 1, 'name' => 'John'], ['id' => 2, 'name' => 'James']]
+$collection->getAll(); // [$user1, $user2]
+$collection->toArray(); // [['id' => 1, 'name' => 'John'], ['id' => 2, 'name' => 'James']]
 
 ```
 
