@@ -36,14 +36,6 @@ final class ValueTest extends TestCase
         $value->toMap();
     }
 
-    public function testToMap_SourceInvalidArray(): void
-    {
-        $value = new Value(['name' => 'John', 'surname' => 'Smith', 123]);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $value->toMap();
-    }
-
     public function testToCollectionValue(): void
     {
         $value = new Value([1, 2, 3]);

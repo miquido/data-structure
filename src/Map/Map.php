@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Miquido\DataStructure\Map;
 
 use Miquido\DataStructure\ArrayConvertibleInterface;
+use Miquido\DataStructure\ScalarConvertibleInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
 use Miquido\DataStructure\Value\Value;
@@ -38,7 +39,6 @@ final class Map implements MapInterface
         }
 
         Assert::isArray($values, \sprintf('Invalid input type "%s" (allowed: array, %s)', \gettype($values), ArrayConvertibleInterface::class));
-        Assert::allString(\array_keys($values), 'Only string keys are allowed');
 
         $this->data = $values;
     }
@@ -172,7 +172,9 @@ final class Map implements MapInterface
 
     public function keys(): StringCollectionInterface
     {
-        return new StringCollection(...\array_keys($this->data));
+        return new StringCollection(...\array_map(function ($key): string {
+            return (string) $key;
+        }, \array_keys($this->data)));
     }
 
     public function values(): array
@@ -203,6 +205,8 @@ final class Map implements MapInterface
         foreach ($this->data as $key => $value) {
             if ($value instanceof ArrayConvertibleInterface) {
                 $value = $value->toArray();
+            } elseif ($value instanceof ScalarConvertibleInterface) {
+                $value = $value->toScalar();
             }
             $result[$key] = $value;
         }
