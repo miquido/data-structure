@@ -8,7 +8,7 @@
 Set of utility classes for immutable data manipulation.
 
 - [Installation guide](#installation)
-- [Examples](#Examples)
+- [Examples](#examples)
 - [Contributing](#contributing)
 
 ## Installation
@@ -52,16 +52,17 @@ use Miquido\DataStructure\Map\Map;
 $map = new Map(['name' => 'John', 'surname' => 'Smith', 'age' => 30]);
 
 $map->count(); // 3
-\count($map); // 3 - implements \Countable interface
+\count($map); // 3 - Map implements \Countable interface
+// Map also implements \ArrayAccess, but only for accessing the data
+isset($map['name']); // true
+$map['name']; // 'John'
 
 $map->has('name'); // true
-isset($map['name']); // true
 $map->hasAll('name', 'email'); // false
 $map->hasOneOf('name', 'email'); // true
 
 $map->get('name'); // 'John'
 $map->getValue('name'); // new Value('John')
-$map['name']; // 'John' - implements \ArrayAccess
 
 $map->keys(); // new StringCollection('name', 'surname', 'age')
 $map->keys()->values(); // ['name', 'surname', 'age']
