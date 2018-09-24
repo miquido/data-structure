@@ -28,8 +28,12 @@ final class ObjectCollection implements ObjectCollectionInterface
         return new ObjectCollection(...$objects);
     }
 
-    public function toMap(callable $keyProvider): MapInterface
+    public function toMap(callable $keyProvider = null): MapInterface
     {
+        if (!\is_callable($keyProvider)) {
+            return new Map($this->objects);
+        }
+
         return \array_reduce(
             $this->objects,
             function (MapInterface $map, object $object) use ($keyProvider): MapInterface {

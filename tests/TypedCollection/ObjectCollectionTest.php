@@ -43,6 +43,21 @@ final class ObjectCollectionTest extends TestCase
         $this->assertSame([$user1, $user2], $map->values());
     }
 
+    public function testToMap_NoCallback(): void
+    {
+        $email1 = '1@example.com';
+        $user1 = new UserMock(1, $email1);
+        $email2 = '2@example.com';
+        $user2 = new UserMock(2, $email2);
+        $collection = new ObjectCollection($user1, $user2);
+
+        $map = $collection->toMap();
+
+        $this->assertCount(2, $map);
+        $this->assertSame(['0', '1'], $map->keys()->values());
+        $this->assertSame([$user1, $user2], $map->values());
+    }
+
     public function testToMap_InvalidReturnedType(): void
     {
         $collection = new ObjectCollection(new UserMock(1, '1@example.com'), new UserMock(2, '2@example.com'));
