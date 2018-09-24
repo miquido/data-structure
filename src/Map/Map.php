@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Miquido\DataStructure\Map;
 
 use Miquido\DataStructure\ArrayConvertibleInterface;
-use Miquido\DataStructure\ScalarConvertibleInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
+use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\Value\Value;
 use Miquido\DataStructure\Value\ValueInterface;
 use Webmozart\Assert\Assert;
@@ -201,17 +201,7 @@ final class Map implements MapInterface
 
     public function toArray(): array
     {
-        $result = [];
-        foreach ($this->data as $key => $value) {
-            if ($value instanceof ArrayConvertibleInterface) {
-                $value = $value->toArray();
-            } elseif ($value instanceof ScalarConvertibleInterface) {
-                $value = $value->toScalar();
-            }
-            $result[$key] = $value;
-        }
-
-        return $result;
+        return ArrayConverter::toArray($this->data);
     }
 
     /**

@@ -12,6 +12,9 @@ use Miquido\DataStructure\TypedCollection\ObjectCollection;
 use Miquido\DataStructure\TypedCollection\ObjectCollectionInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
+use Miquido\DataStructure\ArrayConverter;
+use Miquido\DataStructure\Value\Scalar\Number\NumberValue;
+use Miquido\DataStructure\Value\Scalar\String\StringValue;
 use Webmozart\Assert\Assert;
 
 final class CollectionValue implements CollectionValueInterface
@@ -28,16 +31,19 @@ final class CollectionValue implements CollectionValueInterface
 
     public function strings(): StringCollectionInterface
     {
-        Assert::allString($this->values);
-
-        return new StringCollection(...$this->values);
+        return new StringCollection(...\array_map(
+            function ($value): string {
+                return StringValue::create($value)->get();
+            },
+            $this->values)
+        );
     }
 
     public function numbers(): NumberCollectionInterface
     {
-        Assert::allNumeric($this->values);
-
-        return new NumberCollection(...$this->values);
+        return new NumberCollection(...\array_map(function ($value): float {
+            return NumberValue::create($value)->float();
+        }, $this->values));
     }
 
     public function integers(): IntegerCollectionInterface
@@ -51,6 +57,8 @@ final class CollectionValue implements CollectionValueInterface
 
     public function objects(): ObjectCollectionInterface
     {
+        Assert::allObject($this->values);
+
         return new ObjectCollection(...$this->values);
     }
 
@@ -76,7 +84,7 @@ final class CollectionValue implements CollectionValueInterface
 
     public function toArray(): array
     {
-        return $this->values;
+        return ArrayConverter::toArray($this->values);
     }
 
     /**
