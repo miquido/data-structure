@@ -22,11 +22,11 @@ final class CollectionValue implements CollectionValueInterface
     /**
      * @var array
      */
-    private $values;
+    private $data;
 
-    public function __construct(array $values)
+    public function __construct(array $data)
     {
-        $this->values = $values;
+        $this->data = $data;
     }
 
     public function strings(): StringCollectionInterface
@@ -35,56 +35,61 @@ final class CollectionValue implements CollectionValueInterface
             function ($value): string {
                 return StringValue::create($value)->get();
             },
-            $this->values)
-        );
+            $this->values()
+        ));
     }
 
     public function numbers(): NumberCollectionInterface
     {
-        return new NumberCollection(...\array_map(function ($value): float {
-            return NumberValue::create($value)->float();
-        }, $this->values));
+        return new NumberCollection(...\array_map(
+            function ($value): float {
+                return NumberValue::create($value)->float();
+            },
+            $this->values()
+        ));
     }
 
     public function integers(): IntegerCollectionInterface
     {
-        Assert::allIntegerish($this->values);
-
-        return new IntegerCollection(...\array_map(function ($value): int {
-            return (int) $value;
-        }, $this->values));
+        return new IntegerCollection(...\array_map(
+            function ($value): int {
+                return NumberValue::create($value)->int();
+            },
+            $this->values()
+        ));
     }
 
     public function objects(): ObjectCollectionInterface
     {
-        Assert::allObject($this->values);
+        $values = $this->values();
+        Assert::allObject($values);
 
-        return new ObjectCollection(...$this->values);
+        return new ObjectCollection(...$values);
     }
 
     public function get(): array
     {
-        return $this->values;
+        return $this->data;
     }
 
     public function keys(): array
     {
-        return \array_keys($this->values);
+        return \array_keys($this->data);
     }
 
     public function values(): array
     {
-        return \array_values($this->values);
+        return \array_values($this->data);
     }
 
     public function count(): int
     {
-        return \count($this->values);
+        return \count($this->data);
     }
 
     public function toArray(): array
     {
-        return ArrayConverter::toArray($this->values);
+        return ArrayConverter::toArray($this->data);
     }
 
     /**
@@ -92,6 +97,6 @@ final class CollectionValue implements CollectionValueInterface
      */
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator($this->values);
+        return new \ArrayIterator($this->data);
     }
 }

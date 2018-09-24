@@ -41,6 +41,8 @@ or simply add this line to your `composer.json` file:
 - [NumberValue](#numbervalue)
 - [CollectionValue](#collectionvalue)
 
+IMPORTANT! All methods across all classes are immutable - they do not modify internal state of the object, they return new class instance with a new state.
+
 ### Map
 Immutable wrapper for associative array.
 
@@ -68,8 +70,6 @@ $map->keys(); // new StringCollection('name', 'surname', 'age')
 $map->keys()->values(); // ['name', 'surname', 'age']
 $map->values(); // ['John', 'Smith', 30]
 $map->toArray(); // ['name' => 'John', 'surname' => 'Smith', 'age' => 30]
-
-// IMPORTANT! Methods does not modify a state of the object, they return new Map() instance with new state
 
 $map = new Map(['name' => 'John', 'surname' => 'Smith']);
 $map2 = $map->set('email', 'john@smith'); // new Map(['name' => 'John', 'surname' => 'Smith', 'email' => 'john@smith'])
@@ -177,25 +177,137 @@ $strings->duplicates(); // new StringCollection('lorem', 'dolor');
 ```
 
 ### IntegerCollection
-### NumberCollection
-### ObjectCollection
-### Value
 
+Represents array of integers with some useful methods. 
+```php
+<?php
+
+use Miquido\DataStructure\TypedCollection\IntegerCollection;
+
+$integers = new IntegerCollection(1, 1, 2, 2);
+$integers->count(); // 4
+$integers->values(); // [1, 1, 2, 2]
+$integers->includes(1); // true
+$integers->push(3); // new IntegerCollection(1, 1, 2, 2, 3)
+$integers->unique(); // new IntegerCollection(1, 2)
+```
+
+### NumberCollection
+Similar to IntegerCollection, but also allows floats.
+```php
+<?php
+
+use Miquido\DataStructure\TypedCollection\NumberCollection;
+
+$integers = new NumberCollection(1.1, 1.2, 2.1, 2.1);
+$integers->count(); // 4
+$integers->values(); // [1.1, 1.2, 2.1, 2.1]
+$integers->includes(1.1); // true
+$integers->push(3.5); // new NumberCollection(1.1, 1.2, 2.1, 2.1, 3.5)
+$integers->unique(); // new NumberCollection(1.1, 1.2, 2.1)
+```
+ 
+### ObjectCollection
+```php
+<?php
+
+use Miquido\DataStructure\TypedCollection\ObjectCollection;
+
+class User 
+{
+    public $id;
+    public $name;
+    
+    public function __construct(int $id, string $name) 
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
+}
+
+$user1 = new User(1, 'John');
+$user2 = new User(2, 'James');
+$collection = new ObjectCollection($user1, $user2);
+$collection->count(); // 2
+$collection->getAll(); // [$user1, $user2]
+
+// returns new Map(['john' => $user1, 'james' => $user2]) 
+$collection->toMap(function (User $user): string {
+    // callback has to provide a unique key for each object
+    return \strtolower($user->name);
+});
+
+```
+
+
+### Value
+Represents a mixed value, useful when your data comes from unknown source and you want to get a specific data type.
+
+See examples below: 
 ```php
 <?php
 
 use Miquido\DataStructure\Value\Value;
 
-$value = new Value(' lorem ipsum ');
-$value->string(); // ' lorem ipsum '
-$value->toStringValue()->trim()->toUpper()->get(); // 'LOREM IPSUM'
-$value->toStringValue()->split(' ')->values(); // ['lorem', 'ipsum']
+/*
+public function toMap(): MapInterface;
+public function toCollectionValue(bool $castScalar = true): CollectionValueInterface;
+public function toNumberValue(): NumberValueInterface;
+public function int(): int;
+public function float(): float;
+public function bool(bool $parseString = true): bool;
+public function dateTime(): \DateTime;
+*/
+
+$value = new Value('lorem ipsum');
+$value->getRawValue(); // 'lorem ipsum'
+$value->string(); // 'lorem ipsum'
+$value->toScalarValue(); // new ScalarValue('lorem ipsum')
+$value->toStringValue(); // new StringValue('lorem ipsum')
+$value->toCollectionValue(); // new CollectionValue(['lorem ipsum'])
+
+$value = new Value(1537791526);
+$value->string(); // '1537791526'
+$value->int(); // 1537791526
+$value->toNumberValue(); // new NumberValue(1537791526)
+$value->dateTime()->format('Y-m-d'); // '2018-09-24'
+
+$value = new Value('false');
+$value->bool(); // false - string is parsed, so 'false' 'no' 'null' or '0' are casted to false
+$value->bool(false); // true - because 'false' is not an empty string
+
 ```
 
 ### ScalarValue
 ### StringValue
 ### NumberValue
 ### CollectionValue
+
+```php
+<?php
+
+use Miquido\DataStructure\Value\Collection\CollectionValue;
+
+$collection = new CollectionValue(['1', '2', '3']);
+$collection->integers(); // new IntegerCollection(1, 2, 3)
+$collection->numbers(); // new NumberCollection(1, 2, 3)
+$collection->strings(); // new StringCollection('1', '2', '3')
+
+/*
+public function strings(): StringCollectionInterface;
+public function numbers(): NumberCollectionInterface;
+
+public function integers(): IntegerCollectionInterface;
+
+public function objects(): ObjectCollectionInterface;
+
+public function keys(): array;
+
+public function values(): array;
+
+public function get(): array;
+*/
+```
 
 
 ## Contributing

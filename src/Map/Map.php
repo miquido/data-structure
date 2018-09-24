@@ -34,6 +34,7 @@ final class Map implements MapInterface
         if (null === $values) {
             $values = [];
         }
+
         if ($values instanceof ArrayConvertibleInterface) {
             $values = $values->toArray();
         }
