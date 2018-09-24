@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\Value\Collection;
 
+use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\TypedCollection\IntegerCollection;
 use Miquido\DataStructure\TypedCollection\IntegerCollectionInterface;
 use Miquido\DataStructure\TypedCollection\NumberCollection;
@@ -12,7 +13,6 @@ use Miquido\DataStructure\TypedCollection\ObjectCollection;
 use Miquido\DataStructure\TypedCollection\ObjectCollectionInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
-use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\Value\Scalar\Number\NumberValue;
 use Miquido\DataStructure\Value\Scalar\String\StringValue;
 use Webmozart\Assert\Assert;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\Map;
 
+use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\ArrayConvertibleInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
-use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\Value\Value;
 use Miquido\DataStructure\Value\ValueInterface;
 use Webmozart\Assert\Assert;
