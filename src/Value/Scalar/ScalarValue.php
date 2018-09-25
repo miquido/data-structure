@@ -39,9 +39,9 @@ final class ScalarValue implements ScalarValueInterface
         return $this->toStringValue()->get();
     }
 
-    public function int(): int
+    public function int(bool $forceCast = true): int
     {
-        return $this->toNumberValue()->int();
+        return $this->toNumberValue()->int($forceCast);
     }
 
     public function float(): float

@@ -16,7 +16,7 @@ interface CollectionValueInterface extends \Countable, \IteratorAggregate, Array
 
     public function numbers(): NumberCollectionInterface;
 
-    public function integers(): IntegerCollectionInterface;
+    public function integers(bool $forceCast = true): IntegerCollectionInterface;
 
     public function objects(): ObjectCollectionInterface;
 

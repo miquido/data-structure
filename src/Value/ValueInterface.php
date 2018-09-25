@@ -24,7 +24,7 @@ interface ValueInterface
 
     public function string(): string;
 
-    public function int(): int;
+    public function int(bool $forceCast = true): int;
 
     public function float(): float;
 

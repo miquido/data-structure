@@ -28,4 +28,19 @@ final class NumberValueTest extends TestCase
         $this->assertNotSame($number, $abs);
         $this->assertSame(123.5, $abs->get());
     }
+
+    public function testIntegerCast(): void
+    {
+        $number = new NumberValue(123.5);
+
+        $this->assertSame(123, $number->int());
+    }
+
+    public function testIntegerCast_ForceCastDisabled(): void
+    {
+        $number = new NumberValue(123.5);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $number->int(false);
+    }
 }

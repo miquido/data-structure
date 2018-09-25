@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Miquido\DataStructure\Value\Collection;
 
+use Miquido\DataStructure\ArrayConverter;
 use Miquido\DataStructure\TypedCollection\IntegerCollection;
 use Miquido\DataStructure\TypedCollection\IntegerCollectionInterface;
 use Miquido\DataStructure\TypedCollection\NumberCollection;
@@ -12,6 +13,8 @@ use Miquido\DataStructure\TypedCollection\ObjectCollection;
 use Miquido\DataStructure\TypedCollection\ObjectCollectionInterface;
 use Miquido\DataStructure\TypedCollection\StringCollection;
 use Miquido\DataStructure\TypedCollection\StringCollectionInterface;
+use Miquido\DataStructure\Value\Scalar\Number\NumberValue;
+use Miquido\DataStructure\Value\Scalar\String\StringValue;
 use Webmozart\Assert\Assert;
 
 final class CollectionValue implements CollectionValueInterface
@@ -19,64 +22,74 @@ final class CollectionValue implements CollectionValueInterface
     /**
      * @var array
      */
-    private $values;
+    private $data;
 
-    public function __construct(array $values)
+    public function __construct(array $data)
     {
-        $this->values = $values;
+        $this->data = $data;
     }
 
     public function strings(): StringCollectionInterface
     {
-        Assert::allString($this->values);
-
-        return new StringCollection(...$this->values);
+        return new StringCollection(...\array_map(
+            function ($value): string {
+                return StringValue::create($value)->get();
+            },
+            $this->values()
+        ));
     }
 
     public function numbers(): NumberCollectionInterface
     {
-        Assert::allNumeric($this->values);
-
-        return new NumberCollection(...$this->values);
+        return new NumberCollection(...\array_map(
+            function ($value): float {
+                return NumberValue::create($value)->float();
+            },
+            $this->values()
+        ));
     }
 
-    public function integers(): IntegerCollectionInterface
+    public function integers(bool $forceCast = true): IntegerCollectionInterface
     {
-        Assert::allIntegerish($this->values);
-
-        return new IntegerCollection(...\array_map(function ($value): int {
-            return (int) $value;
-        }, $this->values));
+        return new IntegerCollection(...\array_map(
+            function ($value) use ($forceCast): int {
+                return NumberValue::create($value)->int($forceCast);
+            },
+            $this->values()
+        ));
     }
 
     public function objects(): ObjectCollectionInterface
     {
-        return new ObjectCollection(...$this->values);
+        $values = $this->values();
+        Assert::allObject($values);
+
+        return new ObjectCollection(...$values);
     }
 
     public function get(): array
     {
-        return $this->values;
+        return $this->data;
     }
 
     public function keys(): array
     {
-        return \array_keys($this->values);
+        return \array_keys($this->data);
     }
 
     public function values(): array
     {
-        return \array_values($this->values);
+        return \array_values($this->data);
     }
 
     public function count(): int
     {
-        return \count($this->values);
+        return \count($this->data);
     }
 
     public function toArray(): array
     {
-        return $this->values;
+        return ArrayConverter::toArray($this->data);
     }
 
     /**
@@ -84,6 +97,6 @@ final class CollectionValue implements CollectionValueInterface
      */
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator($this->values);
+        return new \ArrayIterator($this->data);
     }
 }
