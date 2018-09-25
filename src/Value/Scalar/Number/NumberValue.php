@@ -30,8 +30,12 @@ final class NumberValue implements NumberValueInterface
         return new NumberValue($callback($this->number));
     }
 
-    public function int(): int
+    public function int(bool $forceCast = true): int
     {
+        if (!$forceCast) {
+            Assert::integerish($this->number);
+        }
+
         return (int) $this->number;
     }
 

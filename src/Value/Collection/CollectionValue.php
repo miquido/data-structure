@@ -49,11 +49,11 @@ final class CollectionValue implements CollectionValueInterface
         ));
     }
 
-    public function integers(): IntegerCollectionInterface
+    public function integers(bool $forceCast = true): IntegerCollectionInterface
     {
         return new IntegerCollection(...\array_map(
-            function ($value): int {
-                return NumberValue::create($value)->int();
+            function ($value) use ($forceCast): int {
+                return NumberValue::create($value)->int($forceCast);
             },
             $this->values()
         ));
