@@ -239,15 +239,15 @@ $value->int(); // 1537791526
 $value->toNumberValue(); // new NumberValue(1537791526)
 $value->dateTime()->format('Y-m-d'); // '2018-09-24'
 ```
-
+It can also parse a string to boolean:
 ```php
 <?php
 
 use Miquido\DataStructure\Value\Value;
 
 $value = new Value('false');
-$value->bool(); // false - string is parsed, so 'false' 'no' 'null' or '0' are casted to false
-$value->bool(false); // true - because 'false' is not an empty string
+$value->bool(); // string parsing is enabled by default, false - string is parsed, so 'false' 'no' 'null' or '0' are casted to false
+$value->bool(false); // when string parsing is disabled it will return true - because 'false' is not an empty string
 ```
 
 ```php
@@ -262,21 +262,57 @@ $value->toCollectionValue()->strings(); // new StringCollection('lorem', 'ipsum'
 
 Check **[Miquido\DataStructure\Value\ValueInterface](src/Value/ValueInterface.php)** for all available methods.
 
+### CollectionValue
+Similar to *Value* but its interface is reduced to only multiple values manipulation.
+
+Check **[Miquido\DataStructure\Value\Collection\CollectionValueInterface](src/Value/Collection/CollectionValueInterface.php)** for all available methods.
+
 ### ScalarValue
+Similar to *Value* but its interface is reduced to only scalar values manipulation.  
 
 Check **[Miquido\DataStructure\Value\Scalar\ScalarValueInterface](src/Value/Scalar/ScalarValueInterface.php)** for all available methods.
 
 ### StringValue
+Wraps a string into an object with some useful methods.
+
+```php
+<?php
+
+use Miquido\DataStructure\Value\Scalar\String\StringValue;
+
+$string = new StringValue('lorem ipsum');
+$string->get(); // returns raw string
+$string->toUpper()->get(); // 'LOREM IPSUM'
+$string->split(' ')->values(); // ['lorem', 'ipsum']
+
+// map() returns new StringValue with a string returned from a callback
+$string->map(function (string $value): string {
+    return strrev($value);
+});
+$string->map('strrev'); // alternative way to write a callback
+```
 
 Check **[Miquido\DataStructure\Value\Scalar\String\StringValueInterface](src/Value/Scalar/String/StringValueInterface.php)** for all available methods.
 
 ### NumberValue
 
+Wraps a number into an object.
+```php
+<?php
+
+use Miquido\DataStructure\Value\Scalar\Number\NumberValue;
+
+$number = new NumberValue(-1);
+$number->float(); // cast to float
+$number->int(); // cast to int
+
+// map() returns new NumberValue(1)
+$number->map(function (float $value): float {
+    return abs($value);
+});
+```
+
 Check **[Miquido\DataStructure\Value\Scalar\Number\NumberValueInterface](src/Value/Scalar/Number/NumberValueInterface.php)** for all available methods.
-
-### CollectionValue
-
-Check **[Miquido\DataStructure\Value\Collection\CollectionValueInterface](src/Value/Collection/CollectionValueInterface.php)** for all available methods.
 
 
 ## Contributing
