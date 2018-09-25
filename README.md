@@ -11,11 +11,8 @@ Set of utility classes for immutable data manipulation.
 - [Examples](#examples)
 - [Contributing](#contributing)
 
-## Installation
-
-Data-structure is available on [Packagist](https://packagist.org/packages/miquido/data-structure), 
-and installation via [Composer](https://getcomposer.org) is the recommended way to install it. 
-To start using it just run following command from your project directory:
+## Installation 
+Use [Composer](https://getcomposer.org) to install the package:
 
 ```shell
 composer require miquido/data-structure
