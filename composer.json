@@ -2,7 +2,7 @@
     "name": "miquido/data-structure",
     "type": "library",
     "description": "Immutable Data Structures",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "keywords": [
         "PHP",
         "Immutable",

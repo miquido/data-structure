@@ -1,5 +1,10 @@
 <a name=""></a>
-# [](https://github.com/miquido/data-structure/compare/v1.0.0...v) (2018-09-25)
+# [](https://github.com/miquido/data-structure/compare/v1.0.1...v) (2018-10-05)
+
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/miquido/data-structure/compare/v1.0.0...v1.0.1) (2018-10-05)
 
 
 
